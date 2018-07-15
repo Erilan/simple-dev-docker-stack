@@ -1,0 +1,34 @@
+version: '3'
+
+#    command: sh "/scripts/testEntrypoint.sh"
+#    depends_on:
+#      - nodejs
+services:
+  apache:
+    build: ./apache
+    ports:
+      - 80:80
+    volumes:
+      - ./www:/var/www
+  mysql:
+    build: ./mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=mysql
+      - MYSQL_PASSWORD=mysql
+      - MYSQL_DATABASE=dev
+  phpmyadminlo:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - mysql:mysql
+    ports:
+      - 8080:80
+    environment:
+      - MYSQL_USERNAME=root
+      - MYSQL_ROOT_PASSWORD=root
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
